@@ -18,7 +18,6 @@ namespace DevBuild.Utilities
         /// <returns>A yes-or-no answer enum set to Yes, No, or Answer Not Given. </returns>
         public static YesNoAnswer GetYesOrNoAnswer(string questionPrompt)
         {
-            YesNoAnswer tmp = YesNoAnswer.AnswerNotGiven;
             string userResponse = "";
 
             while ( userResponse != "y" && userResponse != "yes" && 
@@ -30,12 +29,11 @@ namespace DevBuild.Utilities
             switch (userResponse)
             {
                 case "y":
-                case "yes": tmp = YesNoAnswer.Yes; break;
+                case "yes": return YesNoAnswer.Yes;
                 case "n":
-                case "no":  tmp = YesNoAnswer.No; break;
-                default: tmp = YesNoAnswer.AnswerNotGiven; break;
+                case "no":  return YesNoAnswer.No;
+                default:    return YesNoAnswer.AnswerNotGiven;
             }
-            return tmp;
         }
 
         public static string PromptUntilValidEntry(string message, params InformationType[] inputValidationFilters) {
@@ -83,14 +81,31 @@ namespace DevBuild.Utilities
             return;
         }
 
-        public static uint SelectMenuOption(int numberOfOptions) {
-            uint userSelection = 0;
-            string userEntry = "";
 
-            while (!uint.TryParse(userEntry, out userSelection) ||
-                    userSelection < 0 ||
-                    userSelection > numberOfOptions) {
-                PromptUntilValidEntry($"Please enter a selection, 1-{numberOfOptions}: ", out userEntry, InformationType.Numeric);
+        /// <summary>
+        /// This method allows for selection from a displayed menu, assuming the first menu option will always be 1"
+        /// </summary>
+        /// <param name="numberOfOptions"></param>
+        /// <returns></returns>
+        [Obsolete("This method is here for legacy purposes. Please use the more versatile SelectNumberBetween method in the future.")]
+        public static uint SelectMenuOption(int numberOfOptions) {
+            uint userSelection = (uint)SelectNumberBetween(1, numberOfOptions);
+            return userSelection;
+        }
+
+        /// <summary>
+        /// Allows user to obtain a number between a given minimum and a given maximum
+        /// </summary>
+        /// <param name="minimum">The minimum number allowed to be selected, inclusive.</param>
+        /// <param name="maximum"></param>
+        /// <returns></returns>
+        public static double SelectNumberBetween(int minimum, int maximum) {
+            double userSelection = 0.0f;
+            string userEntry = "";
+            while (!double.TryParse(userEntry, out userSelection) ||
+                    userSelection < minimum ||
+                    userSelection > maximum) {
+                PromptUntilValidEntry($"Please enter a selection, {minimum}-{maximum}: ", out userEntry, InformationType.Numeric);
             }
             return userSelection;
         }

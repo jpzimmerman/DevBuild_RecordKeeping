@@ -31,7 +31,8 @@ namespace DevBuild.Utilities
 
     class Validation
     {
-        private const string nameRegexPattern               = @"^[A-Za-z {2}]{1,29}$";
+        #region Pre-defined regular expression strings
+        private const string nameRegexPattern               = @"^[A-Za-z {2}.]{1,29}$";
         private const string emailRegexPattern              = @"^(([A-Za-z0-9]){1,30})+[@]+[a-zA-Z]{5,10}([.])+([A-Za-z.]{3,5})$";
         private const string telephoneNumberRegexPattern    = @"^([(]?\d{3})[)-]\d{3}[-]\d{4}$";
         private const string dateRegexPattern               = @"^(\d\d)+[/]+(\d{2})[/](\d){4}$";
@@ -41,10 +42,11 @@ namespace DevBuild.Utilities
         private const string vowelsRegexPattern             = @"[AEIOUaeiou]";
         private const string punctuationRegexPattern        = @"[?!.-,':;]";
         private const string invalidPunctuationRegexPattern = @"[=+<>/\][)({}|]";
+        #endregion
 
-        //This Dictionary allows a programmer to specify the type of data they're looking to validate, and will provide a default regex pattern 
-        //to check the data against. Default regex patterns are defined above, but I have also allowed the user to add a custom regex pattern 
-        //to this Dictionary using the AddUserGeneratedRegex() method. 
+        /// <summary>
+        /// This Dictionary allows a programmer to specify the type of data they're looking to validate, and will provide a default regex pattern  to check the data against. Default regex patterns are defined above, but I have also allowed the user to add a custom regex pattern    to this Dictionary using the AddUserGeneratedRegex() method.
+        /// </summary>
         private static readonly Dictionary<InformationType, string> InformationRegexes = 
             new Dictionary<InformationType, string> {   { InformationType.Name, nameRegexPattern },
                                                         { InformationType.EmailAddress, emailRegexPattern },
@@ -88,9 +90,9 @@ namespace DevBuild.Utilities
             }
             catch (ArgumentException e)
             {
+                Console.WriteLine(e.Message);
                 Console.WriteLine("A custom validation field has already been added. Multiple custom exceptions will be something we add down the line, but for now, you'll have to restart the program if you want to overwrite the custom field.");
             }
         }
-
     }
 }
